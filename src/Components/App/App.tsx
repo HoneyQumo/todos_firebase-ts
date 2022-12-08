@@ -5,6 +5,7 @@ import {getAuth, User} from 'firebase/auth'
 import firebaseApp from '../../firebase'
 import {IDeed} from '../../types/IDeed'
 import TodoList from '../TodoList/TodoList'
+import TodoAdd from '../TodoAdd/TodoAdd'
 
 
 const App: React.FC = () => {
@@ -107,7 +108,7 @@ const App: React.FC = () => {
           <Route path="/"
                  element={<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed} list={data}
                                     currentUser={currentUser}/>}/>
-          {/*<Route path="/add" element={<TodoAdd add={addDeed} currentUser={currentUser}/>}/>*/}
+          <Route path="/add" element={<TodoAdd addDeed={addDeed} currentUser={currentUser}/>}/>
           {/*<Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>}/>*/}
           {/*<Route path="/register" element={<Register currentUser={currentUser}/>}/>*/}
           {/*<Route path="/login" element={<Login currentUser={currentUser}/>}/>*/}

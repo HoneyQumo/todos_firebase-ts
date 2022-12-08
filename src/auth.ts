@@ -40,6 +40,7 @@ export async function add(user: User, deed: IDeed) {
   await set(oRef, deed)
   const oSnapshot = await get(query(oRef))
   const oDeed = oSnapshot.val()
+  //TODO: Нужно типизировать oDeed
   oDeed.key = oRef.key
   return oDeed
 }
