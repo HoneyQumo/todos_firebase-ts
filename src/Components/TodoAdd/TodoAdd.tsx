@@ -48,7 +48,7 @@ const TodoAdd: React.FC<ITodoAddProps> = ({addDeed, currentUser}) => {
       const fileReader = new FileReader()
       fileReader.onload = () => {
         if (fileReader.result) {
-          formData.image = fileReader.result
+          formData.image = fileReader.result as string
         }
       }
       fileReader.readAsDataURL(cFiles[0])

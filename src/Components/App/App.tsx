@@ -6,6 +6,7 @@ import firebaseApp from '../../firebase'
 import {IDeed} from '../../types/IDeed'
 import TodoList from '../TodoList/TodoList'
 import TodoAdd from '../TodoAdd/TodoAdd'
+import TodoDetail from '../TodoDetail/TodoDetail'
 
 
 const App: React.FC = () => {
@@ -32,7 +33,7 @@ const App: React.FC = () => {
   }
 
   function getDeed(key: string) {
-    return data.find(current => current.key === key)
+    return data.find(deed => deed.key === key)
   }
 
   function showMenuToggle(event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement, MouseEvent>) {
@@ -109,7 +110,7 @@ const App: React.FC = () => {
                  element={<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed} list={data}
                                     currentUser={currentUser}/>}/>
           <Route path="/add" element={<TodoAdd addDeed={addDeed} currentUser={currentUser}/>}/>
-          {/*<Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>}/>*/}
+          <Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>
           {/*<Route path="/register" element={<Register currentUser={currentUser}/>}/>*/}
           {/*<Route path="/login" element={<Login currentUser={currentUser}/>}/>*/}
           {/*<Route path="/logout" element={<Logout currentUser={currentUser}/>}/>*/}

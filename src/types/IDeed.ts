@@ -1,7 +1,7 @@
 export interface IDeed {
   title: string,
   desc: string,
-  image: string | ArrayBuffer,
+  image: string,
   done: boolean,
   key: string
   createdAt: string
