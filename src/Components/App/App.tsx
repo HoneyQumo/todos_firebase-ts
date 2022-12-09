@@ -7,6 +7,7 @@ import {IDeed} from '../../types/IDeed'
 import TodoList from '../TodoList/TodoList'
 import TodoAdd from '../TodoAdd/TodoAdd'
 import TodoDetail from '../TodoDetail/TodoDetail'
+import Register from '../Register/Register'
 
 
 const App: React.FC = () => {
@@ -111,7 +112,7 @@ const App: React.FC = () => {
                                     currentUser={currentUser}/>}/>
           <Route path="/add" element={<TodoAdd addDeed={addDeed} currentUser={currentUser}/>}/>
           <Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>
-          {/*<Route path="/register" element={<Register currentUser={currentUser}/>}/>*/}
+          <Route path="/register" element={<Register currentUser={currentUser}/>}/>
           {/*<Route path="/login" element={<Login currentUser={currentUser}/>}/>*/}
           {/*<Route path="/logout" element={<Logout currentUser={currentUser}/>}/>*/}
         </Routes>
