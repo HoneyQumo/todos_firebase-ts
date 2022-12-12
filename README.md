@@ -1,1 +1,7 @@
-# Перевод *todos_firebase* приложения  (приложения с задачами) в рамках тренировки TypeScript
+# Реализация приложение-задачника *(todos)*
+
+### СТЭК
+```
+React / Redux (@reduxjs/toolkit)
+BulmaCSS
+```
