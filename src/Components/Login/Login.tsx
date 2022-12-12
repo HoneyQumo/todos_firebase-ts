@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {login} from '../../auth'
 import {User} from 'firebase/auth'
+import {Navigate} from 'react-router-dom'
 
 
 interface ILoginProps {
@@ -66,7 +67,7 @@ const Login: React.FC<ILoginProps> = ({currentUser}) => {
 		}
 	}
 
-
+	if (currentUser) return <Navigate to="/"/>;
 	return (
 		<section>
 			<h1>Авторизация</h1>

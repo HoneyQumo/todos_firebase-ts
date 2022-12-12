@@ -9,6 +9,7 @@ import TodoAdd from '../TodoAdd/TodoAdd'
 import TodoDetail from '../TodoDetail/TodoDetail'
 import Register from '../Register/Register'
 import Login from '../Login/Login'
+import Logout from '../Logout/Logout'
 
 
 const App: React.FC = () => {
@@ -115,7 +116,7 @@ const App: React.FC = () => {
           <Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>
           <Route path="/register" element={<Register currentUser={currentUser}/>}/>
           <Route path="/login" element={<Login currentUser={currentUser}/>}/>
-          {/*<Route path="/logout" element={<Logout currentUser={currentUser}/>}/>*/}
+          <Route path="/logout" element={<Logout currentUser={currentUser}/>}/>
         </Routes>
       </main>
     </Router>
