@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {del, getList, setDone} from '../../auth'
-import {getAuth, User} from 'firebase/auth'
+import {getAuth, User, onAuthStateChanged} from 'firebase/auth'
 import firebaseApp from '../../firebase'
 import {IDeed} from '../../types/IDeed'
 import TodoList from '../TodoList/TodoList'
@@ -19,8 +19,12 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // onAuthStateChanged(getAuth(firebaseApp), authStateChanged)
-    //TODO: authStateChanged типизировать
-    const unsubscribe = getAuth(firebaseApp).onAuthStateChanged((user) => setCurrentUser(user))
+    const unsubscribe = getAuth(firebaseApp).onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user)
+        authStateChanged(user)
+      }
+    })
 
     return unsubscribe
   }, [])
