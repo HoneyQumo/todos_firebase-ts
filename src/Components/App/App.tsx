@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {memo, useLayoutEffect, useState} from 'react'
 import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {del, getList, setDone} from '../../auth'
 import {getAuth, User, onAuthStateChanged} from 'firebase/auth'
@@ -17,16 +17,12 @@ const App: React.FC = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
-  useEffect(() => {
-    // onAuthStateChanged(getAuth(firebaseApp), authStateChanged)
-    const unsubscribe = getAuth(firebaseApp).onAuthStateChanged((user) => {
+  useLayoutEffect(() => {
+    onAuthStateChanged(getAuth(firebaseApp), (user) => {
       if (user) {
-        setCurrentUser(user)
         authStateChanged(user)
       }
     })
-
-    return unsubscribe
   }, [])
 
   async function authStateChanged(user: User) {
