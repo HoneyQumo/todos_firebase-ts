@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {User} from 'firebase/auth'
 import {IDeed} from '../../types/IDeed'
 import {add} from '../../auth'
+import {Navigate} from 'react-router-dom'
 
 
 interface ITodoAddProps {
@@ -57,6 +58,9 @@ const TodoAdd: React.FC<ITodoAddProps> = ({addDeed, currentUser}) => {
     }
   }
 
+  if (!currentUser) return <Navigate to="/login" replace />;
+  else if (redirect) return <Navigate to="/"/>;
+  else
   return (
     <section>
       <h1>Создание нового дела</h1>
