@@ -9,32 +9,29 @@ interface IRegisterProps {
 }
 
 const Register: React.FC<IRegisterProps> = ({currentUser}) => {
+	const [email, setEmail] = useState<string>('')
+	const [password, setPassword] = useState<string>('')
+	const [passwordConfirm, setPasswordConfirm] = useState<string>('')
 	const [errorEmail, setErrorEmail] = useState<string>('')
 	const [errorPassword, setErrorPassword] = useState<string>('')
 	const [errorPasswordConfirm, setErrorPasswordConfirm] = useState<string>('')
 
-	const formData = {
-		email: '',
-		password: '',
-		passwordConfirm: '',
-	}
-
 	function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-		formData.email = event.target.value
+		setEmail(event.target.value)
 	}
 
 	function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-		formData.password = event.target.value
+		setPassword(event.target.value)
 	}
 
 	function handlePasswordConfirmChange(event: React.ChangeEvent<HTMLInputElement>) {
-		formData.passwordConfirm = event.target.value
+		setPasswordConfirm(event.target.value)
 	}
 
 	async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 		if (validate()) {
-			const result = await register(formData.email, formData.password)
+			const result = await register(email, password)
 			if (typeof result !== 'object') {
 				showErrorMessage(result)
 			}
@@ -49,19 +46,19 @@ const Register: React.FC<IRegisterProps> = ({currentUser}) => {
 
 	function validate() {
 		resetErrorMessages()
-		if (!formData.email) {
+		if (!email) {
 			setErrorEmail('Адрес электронной почты не указан')
 			return false
 		}
-		if (!formData.password) {
+		if (!password) {
 			setErrorPassword('Пароль не указан')
 			return false
 		}
-		if (!formData.passwordConfirm) {
+		if (!passwordConfirm) {
 			setErrorPasswordConfirm('Повтор пароля не указан')
 			return false
 		}
-		if (formData.password !== formData.passwordConfirm) {
+		if (password !== passwordConfirm) {
 			setErrorPassword('Введенные пароли не совпадают')
 			setErrorPasswordConfirm('Введенные пароли не совпадают')
 			return false
@@ -76,6 +73,8 @@ const Register: React.FC<IRegisterProps> = ({currentUser}) => {
 		} else if (code === 'auth/weak-password') {
 			setErrorPassword('Пароль слишком простой')
 			setErrorPasswordConfirm('Пароль слишком простой')
+		} else if (code === 'auth/invalid-email') {
+			setErrorEmail('Недопустимый формат электронной почты')
 		}
 	}
 
