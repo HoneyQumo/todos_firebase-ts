@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
-import {del, getList, setDone} from '../../auth'
+import {BrowserRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
+import {del, getList, logout, setDone} from '../../auth'
 import {getAuth, User, onAuthStateChanged} from 'firebase/auth'
 import firebaseApp from '../../firebase'
 import {IDeed} from '../../types/IDeed'
@@ -9,7 +9,6 @@ import TodoAdd from '../TodoAdd/TodoAdd'
 import TodoDetail from '../TodoDetail/TodoDetail'
 import Register from '../Register/Register'
 import Login from '../Login/Login'
-import Logout from '../Logout/Logout'
 
 
 const App: React.FC = () => {
@@ -17,7 +16,6 @@ const App: React.FC = () => {
 	const [showMenu, setShowMenu] = useState<boolean>(false)
 	const [currentUser, setCurrentUser] = useState<User | null>(null)
 
-	//TODO: при выходе не работает Logout.
 	async function authStateChanged(user: User) {
 		if (user) {
 			setCurrentUser(user)
@@ -29,10 +27,11 @@ const App: React.FC = () => {
 		}
 	}
 
+	//Todo: Logout не работает, потому что useEffect срабатывает один раз и после этого не обновляет state currentUser
 	useEffect(() => {
-		onAuthStateChanged(getAuth(firebaseApp), (user) => {
+		onAuthStateChanged(getAuth(firebaseApp), async (user) => {
 			if (user) {
-				authStateChanged(user)
+				await authStateChanged(user)
 			}
 		})
 	}, [])
@@ -69,6 +68,14 @@ const App: React.FC = () => {
 		setData(newData)
 	}
 
+	function handleNavLinkLogoutClick() {
+		if (currentUser) {
+			console.log('currentUser')
+			logout()
+			setCurrentUser(null)
+		}
+	}
+
 	return (
 		<Router>
 			<nav className="navbar is-light">
@@ -96,12 +103,12 @@ const App: React.FC = () => {
 							</NavLink>
 						)}
 						{!currentUser && (
-							<NavLink to="/register"
-											 className={({isActive}) => `navbar-item ${isActive ? 'is-active' : ''}`}>Зарегистрироваться
+							<NavLink to="/register" className={({isActive}) => `navbar-item ${isActive ? 'is-active' : ''}`}>
+								Зарегистрироваться
 							</NavLink>)}
 						{currentUser && (
 							<div className="navbar-end">
-								<NavLink to="/logout" className={({isActive}) => `navbar-item ${isActive ? 'is-active' : ''}`}>
+								<NavLink to="/logout" onClick={handleNavLinkLogoutClick} className={({isActive}) => `navbar-item ${isActive ? 'is-active' : ''}`}>
 									Выйти
 								</NavLink>
 							</div>
@@ -111,14 +118,13 @@ const App: React.FC = () => {
 			</nav>
 			<main className="content px-6 mt-6">
 				<Routes>
-					<Route path="/"
-								 element={<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed} list={data}
-																		currentUser={currentUser}/>}/>
+					<Route path="/" element={
+						<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed} list={data} currentUser={currentUser}/>
+					}/>
 					<Route path="/add" element={<TodoAdd addDeed={addDeed} currentUser={currentUser}/>}/>
 					<Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>
 					<Route path="/register" element={<Register currentUser={currentUser}/>}/>
 					<Route path="/login" element={<Login currentUser={currentUser}/>}/>
-					<Route path="/logout" element={<Logout currentUser={currentUser}/>}/>
 				</Routes>
 			</main>
 		</Router>

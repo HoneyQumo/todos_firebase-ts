@@ -9,26 +9,23 @@ interface ILoginProps {
 }
 
 const Login: React.FC<ILoginProps> = ({currentUser}) => {
-	const [errorEmail, setErrorEmail] = useState('')
-	const [errorPassword, setErrorPassword] = useState('')
-
-	const formData = {
-		email: '',
-		password: '',
-	}
+	const [email, setEmail] = useState<string>('')
+	const [password, setPassword] = useState<string>('')
+	const [errorEmail, setErrorEmail] = useState<string>('')
+	const [errorPassword, setErrorPassword] = useState<string>('')
 
 	function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-		formData.email = event.target.value
+		setEmail(event.target.value)
 	}
 
 	function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-		formData.password = event.target.value
+		setPassword(event.target.value)
 	}
 
 	async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 		if (validate()) {
-			const result = await login(formData.email, formData.password)
+			const result = await login(email, password)
 			if (result !== 'object') {
 				showErrorMessage(result)
 			}
@@ -42,11 +39,11 @@ const Login: React.FC<ILoginProps> = ({currentUser}) => {
 
 	function validate() {
 		resetErrorMessage()
-		if (!formData.email) {
+		if (!email) {
 			setErrorEmail('Адрес электронной почты не указан')
 			return false
 		}
-		if (!formData.password) {
+		if (!password) {
 			setErrorPassword('Пароль не указан')
 			return false
 		}

@@ -3,5 +3,5 @@
 ### СТЭК
 ```
 React / Redux (@reduxjs/toolkit)
-BulmaCSS
+Bulma CSS
 ```
