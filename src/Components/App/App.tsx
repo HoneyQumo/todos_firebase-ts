@@ -1,76 +1,66 @@
-import React, {useEffect, useState} from 'react'
-import {BrowserRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
+import React, {useEffect} from 'react'
+import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {del, getList, logout, setDone} from '../../auth'
-import {getAuth, User, onAuthStateChanged} from 'firebase/auth'
+import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import firebaseApp from '../../firebase'
-import {IDeed} from '../../types/IDeed'
 import TodoList from '../TodoList/TodoList'
 import TodoAdd from '../TodoAdd/TodoAdd'
 import TodoDetail from '../TodoDetail/TodoDetail'
 import Register from '../Register/Register'
 import Login from '../Login/Login'
+import {useAppDispatch, useAppSelector} from '../../store/storeHook'
+import {setCurrentUser, toggleBurgerMenu, setUserDeeds, toggleDeedAsDone} from '../../store/slice/appSlice'
 
 
 const App: React.FC = () => {
-	const [data, setData] = useState<IDeed[]>([])
-	const [showMenu, setShowMenu] = useState<boolean>(false)
-	const [currentUser, setCurrentUser] = useState<User | null>(null)
+	const dispatch = useAppDispatch()
+	const userDeeds = useAppSelector(state => state.app.userDeeds)
+	const currentUser = useAppSelector(state => state.app.currentUser)
+	const isBurgerMenu = useAppSelector(state => state.app.isBurgerMenu)
 
-	async function authStateChanged(user: User) {
-		if (user) {
-			setCurrentUser(user)
-			const newData = await getList(user)
-			setData(newData)
-		} else {
-			setCurrentUser(null)
-			setData([])
-		}
-	}
-
-	//Todo: Logout не работает, потому что useEffect срабатывает один раз и после этого не обновляет state currentUser
 	useEffect(() => {
 		onAuthStateChanged(getAuth(firebaseApp), async (user) => {
 			if (user) {
-				await authStateChanged(user)
+				dispatch(setCurrentUser(user))
+				const newData = await getList(user)
+				dispatch(setUserDeeds(newData))
+			} else {
+				dispatch(setCurrentUser(null))
+				dispatch(setUserDeeds(null))
 			}
 		})
 	}, [])
 
 	function getDeed(key: string) {
-		return data.find(deed => deed.key === key)
+		if (userDeeds) {
+			return userDeeds.find(deed => deed.key === key)
+		}
 	}
 
 	function showMenuToggle(event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement, MouseEvent>) {
 		event.preventDefault()
-		setShowMenu(prevState => !prevState)
-	}
-
-	function addDeed(deed: IDeed) {
-		setData(prevState => [...prevState, deed])
+		dispatch(toggleBurgerMenu())
 	}
 
 	async function deleteDeed(key: string) {
 		if (currentUser) {
 			await del(currentUser, key)
 		}
-		const newData = data.filter((current) => current.key !== key)
-		setData(newData)
+		if (userDeeds) {
+			const newData = userDeeds.filter((current) => current.key !== key)
+			dispatch(setUserDeeds(newData))
+		}
 	}
 
 	async function setDoneDeed(key: string) {
 		if (currentUser) {
 			await setDone(currentUser, key)
 		}
-		const newData = data.map(deed => deed.key === key
-			? {...deed, done: !deed.done}
-			: deed,
-		)
-		setData(newData)
+		dispatch(toggleDeedAsDone(key))
 	}
 
 	function handleNavLinkLogoutClick() {
 		if (currentUser) {
-			console.log('currentUser')
 			logout()
 			setCurrentUser(null)
 		}
@@ -83,7 +73,7 @@ const App: React.FC = () => {
 					<NavLink to="/" className={({isActive}) => `navbar-item is-uppercase ${isActive ? 'is-active' : ''}`}>
 						{currentUser ? currentUser.email : 'Todos'}
 					</NavLink>
-					<a href="/" className={showMenu ? 'navbar-burger is-active' : 'navbar-burger'}
+					<a href="/" className={isBurgerMenu ? 'navbar-burger is-active' : 'navbar-burger'}
 						 onClick={showMenuToggle}
 					>
 						<span></span>
@@ -91,7 +81,7 @@ const App: React.FC = () => {
 						<span></span>
 					</a>
 				</div>
-				<div className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'} onClick={showMenuToggle}>
+				<div className={isBurgerMenu ? 'navbar-menu is-active' : 'navbar-menu'} onClick={showMenuToggle}>
 					<div className="navbar-start">
 						{currentUser && (
 							<NavLink to="/add" className={({isActive}) => `navbar-item ${isActive ? 'is-active' : ''}`}>
@@ -118,10 +108,8 @@ const App: React.FC = () => {
 			</nav>
 			<main className="content px-6 mt-6">
 				<Routes>
-					<Route path="/" element={
-						<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed} list={data} currentUser={currentUser}/>
-					}/>
-					<Route path="/add" element={<TodoAdd addDeed={addDeed} currentUser={currentUser}/>}/>
+					<Route path="/" element={<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed}/>}/>
+					<Route path="/add" element={<TodoAdd/>}/>
 					<Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>
 					<Route path="/register" element={<Register currentUser={currentUser}/>}/>
 					<Route path="/login" element={<Login currentUser={currentUser}/>}/>

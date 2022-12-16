@@ -3,15 +3,14 @@ import {User} from 'firebase/auth'
 import {IDeed} from '../../types/IDeed'
 import {add} from '../../auth'
 import {Navigate} from 'react-router-dom'
+import {useAppDispatch, useAppSelector} from '../../store/storeHook'
+import {addDeed} from '../../store/slice/appSlice'
 
 
-interface ITodoAddProps {
-	addDeed: (deed: IDeed) => void
-	currentUser: User | null
-}
-
-const TodoAdd: React.FC<ITodoAddProps> = ({addDeed, currentUser}) => {
+const TodoAdd: React.FC = () => {
 	const [redirect, setRedirect] = useState<boolean>(false)
+	const dispatch = useAppDispatch()
+	const currentUser = useAppSelector(state => state.app.currentUser)
 
 	const formData: IDeed = {
 		key: '',
@@ -29,7 +28,7 @@ const TodoAdd: React.FC<ITodoAddProps> = ({addDeed, currentUser}) => {
 		newDeed.createdAt = date.toLocaleString()
 		if (currentUser) {
 			const addedDeed = await add(currentUser, newDeed)
-			addDeed(addedDeed)
+			dispatch(addDeed(addedDeed))
 		}
 		setRedirect(true)
 	}

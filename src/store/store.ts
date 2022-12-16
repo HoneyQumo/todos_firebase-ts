@@ -1,11 +1,14 @@
 import {configureStore} from '@reduxjs/toolkit'
-import deedsSlice from './slice/deedsSlice'
+import appSlice from './slice/appSlice'
 
 
 const store = configureStore({
 	reducer: {
-		deeds: deedsSlice
+		app: appSlice
 	}
 })
 
 export default store
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
