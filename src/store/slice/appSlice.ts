@@ -14,6 +14,8 @@ const initialState: IAppSliceInitialState = {
 	currentUser: null,
 }
 
+//Todo: Убрать из action алиасы типа <User | null>. В state должны приходить явные типы данных.
+
 const appSlice = createSlice({
 	name: 'app',
 	initialState,

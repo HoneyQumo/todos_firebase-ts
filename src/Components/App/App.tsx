@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
-import {del, getList, logout, setDone} from '../../auth'
+import {getList, logout} from '../../auth'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import firebaseApp from '../../firebase'
 import TodoList from '../TodoList/TodoList'
@@ -9,7 +9,7 @@ import TodoDetail from '../TodoDetail/TodoDetail'
 import Register from '../Register/Register'
 import Login from '../Login/Login'
 import {useAppDispatch, useAppSelector} from '../../store/storeHook'
-import {setCurrentUser, toggleBurgerMenu, setUserDeeds, toggleDeedAsDone} from '../../store/slice/appSlice'
+import {setCurrentUser, toggleBurgerMenu, setUserDeeds} from '../../store/slice/appSlice'
 
 
 const App: React.FC = () => {
@@ -25,7 +25,7 @@ const App: React.FC = () => {
 				dispatch(setUserDeeds(newData))
 			} else {
 				dispatch(setCurrentUser(null))
-				dispatch(setUserDeeds(null))
+				dispatch(setUserDeeds([]))
 			}
 		})
 	}, [])

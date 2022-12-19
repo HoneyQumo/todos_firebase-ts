@@ -24,6 +24,7 @@ const Login: React.FC = () => {
 	async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 		if (validate()) {
+			//Todo: не забудь, тут из login() должен вернуться объект, чтобы авторизация прошла успешно.
 			const result = await login(email, password)
 			if (result !== 'object') {
 				showErrorMessage(result)

@@ -16,7 +16,7 @@ export async function register(email: string, password: string) {
     return error.code
   }
 }
-
+//Todo: переделать пользователя в тип {email: '', uid: '', accessToken: ''}
 export async function login(email: string, password: string) {
   try {
     const oUC = await signInWithEmailAndPassword(getAuth(), email, password)
