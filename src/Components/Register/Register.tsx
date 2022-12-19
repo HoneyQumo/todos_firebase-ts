@@ -2,13 +2,12 @@ import React, {useState} from 'react'
 import {Navigate} from 'react-router-dom'
 import {User} from 'firebase/auth'
 import {register} from '../../auth'
+import {useAppSelector} from '../../store/storeHook'
 
 
-interface IRegisterProps {
-	currentUser: User | null
-}
+const Register: React.FC = () => {
+	const currentUser = useAppSelector(state => state.app.currentUser)
 
-const Register: React.FC<IRegisterProps> = ({currentUser}) => {
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
 	const [passwordConfirm, setPasswordConfirm] = useState<string>('')

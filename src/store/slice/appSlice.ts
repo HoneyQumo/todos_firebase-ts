@@ -1,8 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {User} from 'firebase/auth'
+import {getAuth, onAuthStateChanged, User} from 'firebase/auth'
 import {IDeed} from '../../types/IDeed'
-import {setDone} from '../../auth'
-
 
 interface IAppSliceInitialState {
 	userDeeds: IDeed[] | null,

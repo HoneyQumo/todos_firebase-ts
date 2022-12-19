@@ -14,7 +14,6 @@ import {setCurrentUser, toggleBurgerMenu, setUserDeeds, toggleDeedAsDone} from '
 
 const App: React.FC = () => {
 	const dispatch = useAppDispatch()
-	const userDeeds = useAppSelector(state => state.app.userDeeds)
 	const currentUser = useAppSelector(state => state.app.currentUser)
 	const isBurgerMenu = useAppSelector(state => state.app.isBurgerMenu)
 
@@ -31,33 +30,11 @@ const App: React.FC = () => {
 		})
 	}, [])
 
-	function getDeed(key: string) {
-		if (userDeeds) {
-			return userDeeds.find(deed => deed.key === key)
-		}
-	}
-
 	function showMenuToggle(event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement, MouseEvent>) {
 		event.preventDefault()
 		dispatch(toggleBurgerMenu())
 	}
 
-	async function deleteDeed(key: string) {
-		if (currentUser) {
-			await del(currentUser, key)
-		}
-		if (userDeeds) {
-			const newData = userDeeds.filter((current) => current.key !== key)
-			dispatch(setUserDeeds(newData))
-		}
-	}
-
-	async function setDoneDeed(key: string) {
-		if (currentUser) {
-			await setDone(currentUser, key)
-		}
-		dispatch(toggleDeedAsDone(key))
-	}
 
 	function handleNavLinkLogoutClick() {
 		if (currentUser) {
@@ -108,11 +85,11 @@ const App: React.FC = () => {
 			</nav>
 			<main className="content px-6 mt-6">
 				<Routes>
-					<Route path="/" element={<TodoList setDoneDeed={setDoneDeed} deleteDeed={deleteDeed}/>}/>
+					<Route path="/" element={<TodoList/>}/>
 					<Route path="/add" element={<TodoAdd/>}/>
-					<Route path="/:key" element={<TodoDetail getDeed={getDeed} currentUser={currentUser}/>}/>
-					<Route path="/register" element={<Register currentUser={currentUser}/>}/>
-					<Route path="/login" element={<Login currentUser={currentUser}/>}/>
+					<Route path="/:key" element={<TodoDetail/>}/>
+					<Route path="/register" element={<Register/>}/>
+					<Route path="/login" element={<Login/>}/>
 				</Routes>
 			</main>
 		</Router>

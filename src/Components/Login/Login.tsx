@@ -2,13 +2,12 @@ import React, {useState} from 'react'
 import {login} from '../../auth'
 import {User} from 'firebase/auth'
 import {Navigate} from 'react-router-dom'
+import {useAppSelector} from '../../store/storeHook'
 
 
-interface ILoginProps {
-	currentUser: User | null
-}
+const Login: React.FC = () => {
+	const currentUser = useAppSelector(state => state.app.currentUser)
 
-const Login: React.FC<ILoginProps> = ({currentUser}) => {
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
 	const [errorEmail, setErrorEmail] = useState<string>('')
@@ -64,7 +63,7 @@ const Login: React.FC<ILoginProps> = ({currentUser}) => {
 		}
 	}
 
-	if (currentUser) return <Navigate to="/"/>;
+	if (currentUser) return <Navigate to="/"/>
 	return (
 		<section>
 			<h1>Авторизация</h1>

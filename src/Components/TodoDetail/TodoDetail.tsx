@@ -3,20 +3,18 @@ import {useParams, Navigate} from 'react-router-dom'
 import {User} from 'firebase/auth'
 import {IDeed} from '../../types/IDeed'
 import {prepareAutoBatched} from '@reduxjs/toolkit'
+import {useAppSelector} from '../../store/storeHook'
 
 
-interface ITodoDetailProps {
-	getDeed: (key: string) => IDeed | undefined
-	currentUser: User | null
-}
-
-const TodoDetail: React.FC<ITodoDetailProps> = ({getDeed, currentUser}) => {
+const TodoDetail: React.FC = () => {
 	const {key} = useParams()
-	let deed
-	if (key) {
-		deed = getDeed(key)
-	}
+	const userDeeds = useAppSelector(state => state.app.userDeeds)
+	const currentUser = useAppSelector(state => state.app.currentUser)
 
+	let deed
+	if (userDeeds) {
+		deed = userDeeds.find(deed => deed.key === key)
+	}
 
 	if (!currentUser) return <Navigate to="/login" replace/>
 	if (deed) {
